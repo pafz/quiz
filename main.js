@@ -1,102 +1,76 @@
 //después añadir desde DOM class='hide' donde sea necesario
-const h1 = document.createElement("h1");
-h1.innerText = "Welcome to the Quiz";
-document.body.appendChild(h1);
 
 const divContainer = document.createElement("div");
 document.body.appendChild(divContainer);
 
-const divQuestions = document.createElement("div");
-divQuestions.classList = "hide";
-divContainer.appendChild(divQuestions);
+const divQuestions = document.getElementById("question");
+const answerContainer = document.getElementById("answers");
 
-const btnQuestions = document.createElement("button");
-divContainer.appendChild(btnQuestions);
+const btnStart = document.createElement("button");
+btnStart.innerText = "Start the game";
+//btnStart.classList = "hide";
+document.body.appendChild(btnStart);
 
-const btn = document.createElement("button");
-btn.innerText = "Start the game";
-document.body.appendChild(btn);
-let apiContent = "";
+const bntNext = document.createElement("button");
+bntNext.innerText = "Next ->";
+bntNext.classList = "hide";
+document.body.appendChild(bntNext);
 
 //i question
-let currentQuestionIndex;
+let currentQuestionIndex = 0;
 
 const startGame = (e) => {
   e.preventDefault();
-  console.log("hi");
-  currentQuestionIndex = 0;
   startApi();
 };
 
-//print all questions IGNORE
-const printAllQuestions = () => {
-  setTimeout(() => {
-    allTheQuiz.forEach((question) => {
-      //console.log(question.question);
-    });
-  }, 1000);
-};
-
-//sofi
-/*
-function showQuestionSofi(question) {
-  console.log(question);
-  //divQuestions.innerHTML = console.log(correct_answers);
-  correct_answers.forEach((answer) => {
-    const button = document.createElement("button");
-    button.innerText = answer.text;
-
-    if (correct_answer) {
-      button.dataset.correct = true;
-    }
-
-    answerButtonsElement.appendChild(button);
-  });
-}*/
-
-//show answer FIXME: imprimir botones con respuesta correcta e incorrecta y hacerla random
-const showQuestion = () => {
-  //questionElement.innerText = question.question;
-  allTheQuiz.forEach((incorrect_answers) => {
-    const btnQuestions = document.createElement("button");
-    btnQuestions.innerText = incorrect_answers;
-    divContainer.appendChild(btnQuestions);
-    console.log("entra en showQuestions");
-
-    if (incorrect_answers) {
-      button.dataset.correct = true;
-    }
-
-    answerButtonsElement.appendChild(button);
-  });
-};
-
-//create to print DOM TODO: aparezca de 1 en 1 +=
-const printDOM = () => {
-  setTimeout(() => {
-    allTheQuiz.forEach((question) => {
-      //inner DOM
-      divQuestions.innerHTML += `<p>${question.question}</p>`;
-    });
-  }, 1000);
-  console.log("introDOM");
-  showQuestion();
-};
-
 //API
-let allTheQuiz = [];
 const startApi = () => {
   axios
     .get(
       "https://opentdb.com/api.php?amount=10&category=25&type=multiple&encode=url3986"
     )
     .then((res) => {
-      allTheQuiz = res.data.results;
-      console.log(allTheQuiz);
+      const apiData = res.data.results;
+      console.log(apiData);
+      printQuestion(apiData);
     })
     .catch((err) => console.error(err));
-  printDOM();
-  //showQuestionSofi(allTheQuiz.question);
 };
 
-btn.addEventListener("click", startGame);
+const sanitizeText = (text) => decodeURI(text).replaceAll("%3F", "?"); //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/decodeURI
+
+/////print a Question & Answers
+const printQuestion = (apiData) => {
+  const questionAndAnswers = apiData[currentQuestionIndex];
+  divQuestions.innerText = sanitizeText(questionAndAnswers.question);
+  console.log(question);
+
+  //correct_answer:
+  const liAnswer = document.createElement("li");
+  divQuestions.appendChild(liAnswer);
+
+  const btnAnswer = document.createElement("button");
+  btnAnswer.innerText = sanitizeText(questionAndAnswers.correct_answer);
+  liAnswer.appendChild(btnAnswer);
+  btnAnswer.addEventListener("click", () => {
+    btnAnswer.style.color = "green";
+    document.querySelectorAll("li");
+  });
+
+  //incorrect_answers:
+  for (let incorrect_answer of questionAndAnswers.incorrect_answers) {
+    const liAnswerIncorrect = document.createElement("li");
+    divQuestions.appendChild(liAnswerIncorrect);
+
+    const btnAnswerIncorrect = document.createElement("button");
+    btnAnswerIncorrect.innerText = sanitizeText(incorrect_answer);
+    liAnswerIncorrect.appendChild(btnAnswerIncorrect);
+
+    btnAnswerIncorrect.addEventListener("click", () => {
+      btnAnswerIncorrect.style.color = "red";
+    });
+  }
+};
+
+btnStart.addEventListener("click", startGame);
