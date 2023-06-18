@@ -1,10 +1,9 @@
-//después añadir desde DOM class='hide' donde sea necesario
-
-const divContainer = document.createElement("div");
-document.body.appendChild(divContainer);
-
-const divQuestions = document.getElementById("question");
+//TODO:después añadir desde DOM class='hide' donde sea necesario
+//TODO:aumentar contador a 9 para probar cuando se lleva a la últma pregunta
+const questionContainer = document.getElementById("question");
 const answerContainer = document.getElementById("answers");
+
+const ulAnswers = document.getElementById("answers");
 
 const btnStart = document.createElement("button");
 btnStart.innerText = "Start the game";
@@ -24,6 +23,7 @@ const startGame = (e) => {
   startApi();
 };
 
+let score = 0;
 //API
 const startApi = () => {
   axios
@@ -43,25 +43,35 @@ const sanitizeText = (text) => decodeURI(text).replaceAll("%3F", "?"); //https:/
 /////print a Question & Answers
 const printQuestion = (apiData) => {
   const questionAndAnswers = apiData[currentQuestionIndex];
-  divQuestions.innerText = sanitizeText(questionAndAnswers.question);
-  console.log(question);
+  questionContainer.innerText = sanitizeText(questionAndAnswers.question);
 
+  ulAnswers.innerHTML = "";
   //correct_answer:
   const liAnswer = document.createElement("li");
-  divQuestions.appendChild(liAnswer);
+  ulAnswers.appendChild(liAnswer);
 
   const btnAnswer = document.createElement("button");
   btnAnswer.innerText = sanitizeText(questionAndAnswers.correct_answer);
   liAnswer.appendChild(btnAnswer);
   btnAnswer.addEventListener("click", () => {
     btnAnswer.style.color = "green";
-    document.querySelectorAll("li");
+    btnAnswer.disabled = true;
+    document
+      .querySelectorAll("li button")
+      .forEach((button) => button.setAttribute("disabled", ""));
+    score += 1;
+    document.getElementById("score").innerText = score;
+
+    setTimeout(() => {
+      currentQuestionIndex++;
+      printQuestion(apiData);
+    }, 3000);
   });
 
   //incorrect_answers:
   for (let incorrect_answer of questionAndAnswers.incorrect_answers) {
     const liAnswerIncorrect = document.createElement("li");
-    divQuestions.appendChild(liAnswerIncorrect);
+    ulAnswers.appendChild(liAnswerIncorrect);
 
     const btnAnswerIncorrect = document.createElement("button");
     btnAnswerIncorrect.innerText = sanitizeText(incorrect_answer);
@@ -69,6 +79,13 @@ const printQuestion = (apiData) => {
 
     btnAnswerIncorrect.addEventListener("click", () => {
       btnAnswerIncorrect.style.color = "red";
+      document
+        .querySelectorAll("li button")
+        .forEach((button) => button.setAttribute("disabled", ""));
+      setTimeout(() => {
+        currentQuestionIndex++;
+        printQuestion(apiData);
+      }, 3000);
     });
   }
 };
