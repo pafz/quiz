@@ -28,6 +28,8 @@ const startGame = e => {
 };
 
 let score = 0;
+let playerId = 1;
+
 //API
 const startApi = () => {
   axios
@@ -102,10 +104,17 @@ const printQuestion = apiData => {
       }, 3000);
     });
   }
+  //LOCALSTORAGE del score: cuando haga reset, crear otro score
+  const playerX = localStorage.setItem(
+    `player_id${playerId}`,
+    JSON.stringify(score)
+  );
 };
+//AQUI
+let players = JSON.parse(localStorage.getItem('itemsArray'));
 
 //
-function selectAnswer() {
+const selectAnswer = () => {
   Array.from(answerButtonsElement.children).forEach(button => {
     setStatusClass(button);
   });
@@ -114,7 +123,9 @@ function selectAnswer() {
   } else {
     startButton.innerText = 'Restart';
     startButton.classList.remove('hide');
+    `player_id${playerId++}`;
+    const items = { ...localStorage };
   }
-}
+};
 
 btnStart.addEventListener('click', startGame);
