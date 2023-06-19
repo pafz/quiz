@@ -1,6 +1,9 @@
 //TODO:después añadir desde DOM class='hide' donde sea necesario
 //TODO:aumentar contador a 9 para probar cuando se lleva a la últma pregunta. Select li button
 //TODO: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort
+
+//FIXED: no imprime el último acierto score
+//borrar lo que está de más y añadir otro user desde id
 const questionContainer = document.getElementById('question');
 const answerContainer = document.getElementById('answers');
 
@@ -19,16 +22,16 @@ document.body.appendChild(bntNext);
 
 //i question en realidad es 0
 let currentQuestionIndex;
+let score;
+let playerId = 1;
 
 const startGame = e => {
   e.preventDefault();
   currentQuestionIndex = 0;
+  score = 0;
   btnStart.classList.add('hide');
   startApi();
 };
-
-let score = 0;
-let playerId = 1;
 
 //API
 const startApi = () => {
@@ -49,69 +52,72 @@ const sanitizeText = text => decodeURI(text).replaceAll('%3F', '?'); //https://d
 /////print a Question & Answers
 const printQuestion = apiData => {
   const questionAndAnswers = apiData[currentQuestionIndex];
+  document.getElementById('question-number').innerText =
+    currentQuestionIndex + 1;
   questionContainer.innerText = sanitizeText(questionAndAnswers.question);
 
   ulAnswers.innerHTML = '';
-  //correct_answer:
-  const liAnswer = document.createElement('li');
-  ulAnswers.appendChild(liAnswer);
+  let allAnswers = [];
+  allAnswers.push(questionAndAnswers.correct_answer);
+  allAnswers = allAnswers.concat(questionAndAnswers.incorrect_answers);
 
-  const btnAnswer = document.createElement('button');
-  btnAnswer.innerText = sanitizeText(questionAndAnswers.correct_answer);
-  liAnswer.appendChild(btnAnswer);
-  btnAnswer.addEventListener('click', () => {
-    btnAnswer.style.color = 'green';
-    btnAnswer.disabled = true;
+  allAnswers = allAnswers.sort(() => (Math.random() > 0.5 ? 1 : -1));
+
+  const checkAnswer = (apiData, answer, btn) => {
+    const correctAnswer =
+      answer === apiData[currentQuestionIndex].correct_answer;
+    if (correctAnswer) {
+      score += 1;
+      document.getElementById('score').innerText = score;
+      btn.style.color = 'green';
+    } else {
+      btn.style.color = 'red';
+    }
+
     document
       .querySelectorAll('li button')
       .forEach(button => button.setAttribute('disabled', ''));
-    score += 1;
-    document.getElementById('score').innerText = score;
 
     setTimeout(() => {
-      currentQuestionIndex++;
       if (apiData.length > currentQuestionIndex + 1) {
+        currentQuestionIndex++;
         printQuestion(apiData);
       } else {
         btnStart.innerText = 'Restart';
         btnStart.classList.remove('hide');
       }
     }, 3000);
-  });
+  };
 
-  //incorrect_answers:
-  for (let incorrect_answer of questionAndAnswers.incorrect_answers) {
-    const liAnswerIncorrect = document.createElement('li');
-    ulAnswers.appendChild(liAnswerIncorrect);
+  for (let answer of allAnswers) {
+    const li = document.createElement('li');
+    ulAnswers.appendChild(li);
 
-    const btnAnswerIncorrect = document.createElement('button');
-    btnAnswerIncorrect.innerText = sanitizeText(incorrect_answer);
-    liAnswerIncorrect.appendChild(btnAnswerIncorrect);
+    const btnAnswer = document.createElement('button');
+    btnAnswer.innerText = sanitizeText(answer);
+    li.appendChild(btnAnswer);
 
-    btnAnswerIncorrect.addEventListener('click', () => {
-      btnAnswerIncorrect.style.color = 'red';
-      document
-        .querySelectorAll('li button')
-        .forEach(button => button.setAttribute('disabled', ''));
-      setTimeout(() => {
-        currentQuestionIndex++;
-        if (apiData.length > currentQuestionIndex + 1) {
-          printQuestion(apiData);
-        } else {
-          btnStart.innerText = 'Restart';
-          btnStart.classList.remove('hide');
-        }
-      }, 3000);
+    btnAnswer.addEventListener('click', () => {
+      checkAnswer(apiData, answer, btnAnswer);
     });
   }
+
   //LOCALSTORAGE del score: cuando haga reset, crear otro score
   const playerX = localStorage.setItem(
     `player_id${playerId}`,
     JSON.stringify(score)
   );
 };
+
+//localstorage - update
+const update = () => {
+  console.log(
+    localStorage.setItem(`player_id${playerId++}`, JSON.stringify(score))
+  );
+};
+
 //AQUI
-let players = JSON.parse(localStorage.getItem('itemsArray'));
+const read = () => console.log(JSON.parse(localStorage.getItem('itemsArray')));
 
 //
 const selectAnswer = () => {
@@ -122,6 +128,7 @@ const selectAnswer = () => {
     nextButton.classList.remove('hide');
   } else {
     startButton.innerText = 'Restart';
+
     startButton.classList.remove('hide');
     `player_id${playerId++}`;
     const items = { ...localStorage };
