@@ -18,10 +18,19 @@ let scores = JSON.parse(localStorage.getItem('scores')) || [];
 //btnStart.classList = "hide";
 document.body.appendChild(btnStart);
 
+//localstorage - get
+const scoreSaved = JSON.parse(localStorage.getItem('scores')); //no hace falta igualar, se parasea
+console.log(scoreSaved);
+
 const bntNext = document.createElement('button');
 bntNext.innerText = 'Next ->';
 bntNext.classList = 'hide';
 document.body.appendChild(bntNext);
+
+const divGraphics = document.getElementById('graphics');
+
+const h1 = document.getElementById('h1');
+const h3 = document.getElementById('h3');
 
 //i question en realidad es 0
 let currentQuestionIndex;
@@ -30,7 +39,7 @@ let playerId = 1;
 
 const startGame = e => {
   e.preventDefault();
-  currentQuestionIndex = 0;
+  currentQuestionIndex = 9;
   score = 0;
   btnStart.classList.add('hide');
   startApi();
@@ -91,6 +100,11 @@ const printQuestion = apiData => {
         localStorage.setItem(`scores`, JSON.stringify(scores));
         btnStart.innerText = 'Restart';
         btnStart.classList.remove('hide');
+        //localstorage - get
+        const scoreSaved = JSON.parse(localStorage.getItem('scores')); //no hace falta igualar, se parasea
+        console.log(scoreSaved);
+        //AQUÍ METER LA GRÁFICA
+        graphis();
       }
     }, 3000);
   };
@@ -114,9 +128,6 @@ const update = () => {
   console.log(localStorage.setItem('player', JSON.stringify(score)));
 };
 
-const userGuardado = JSON.parse(localStorage.getItem('user')); //no hace falta igualar, se parasea
-console.log(userGuardado);
-
 //
 const selectAnswer = () => {
   Array.from(answerButtonsElement.children).forEach(button => {
@@ -134,4 +145,48 @@ const selectAnswer = () => {
   }
 };
 
+//SPA:
+const goWelcome = () => {
+  h1.classList.remove('hide');
+  h3.classList.add('hide');
+};
+
+const goQuestions = () => {};
+
+const goEndPage = () => {
+  question - number.classList.remove('hide');
+  divGraphics.classList.add('hide');
+};
+
+const graphis = () => {
+  const labels = [
+    'Enero',
+    'Febrero',
+    'Marzo',
+    'Abril',
+    'Mayo',
+    'Junio',
+    'Julio',
+  ];
+
+  const data = {
+    labels: labels,
+    datasets: [
+      {
+        label: 'Mi primera gráfica',
+        backgroundColor: 'rgb(255, 99, 132)',
+        borderColor: 'rgb(255, 99, 132)',
+        data: [0, 10, 5, 2, 20, 30, 45],
+      },
+    ],
+  };
+
+  const config = {
+    type: 'bar',
+    data: data,
+    options: {},
+  };
+
+  const myChart = new Chart('myChart', config);
+};
 btnStart.addEventListener('click', startGame);
