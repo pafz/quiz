@@ -2,8 +2,11 @@
 //TODO:aumentar contador a 9 para probar cuando se lleva a la últma pregunta. Select li button
 //TODO: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort
 
-//FIXED: no imprime el último acierto score
+//FIXED: en localstorage no detecta último acierto score
 //borrar lo que está de más y añadir otro user desde id
+//añadir paginas SPA
+
+//CAMBIAR LA KEY a ID y luego asignarle nuevos valores ++
 const questionContainer = document.getElementById('question');
 const answerContainer = document.getElementById('answers');
 
@@ -11,7 +14,7 @@ const ulAnswers = document.getElementById('answers');
 
 const btnStart = document.createElement('button');
 btnStart.innerText = 'Start the game';
-
+let scores = JSON.parse(localStorage.getItem('scores')) || [];
 //btnStart.classList = "hide";
 document.body.appendChild(btnStart);
 
@@ -76,13 +79,16 @@ const printQuestion = apiData => {
 
     document
       .querySelectorAll('li button')
-      .forEach(button => button.setAttribute('disabled', ''));
+      .forEach(button => button.setAttribute('disabled', '')); //también acceder button.disable = true;
 
     setTimeout(() => {
       if (apiData.length > currentQuestionIndex + 1) {
         currentQuestionIndex++;
         printQuestion(apiData);
       } else {
+        //LOCALSTORAGE del score: cuando haga reset, crear otro score
+        scores.push(score);
+        localStorage.setItem(`scores`, JSON.stringify(scores));
         btnStart.innerText = 'Restart';
         btnStart.classList.remove('hide');
       }
@@ -101,23 +107,15 @@ const printQuestion = apiData => {
       checkAnswer(apiData, answer, btnAnswer);
     });
   }
-
-  //LOCALSTORAGE del score: cuando haga reset, crear otro score
-  const playerX = localStorage.setItem(
-    `player_id${playerId}`,
-    JSON.stringify(score)
-  );
 };
 
 //localstorage - update
 const update = () => {
-  console.log(
-    localStorage.setItem(`player_id${playerId++}`, JSON.stringify(score))
-  );
+  console.log(localStorage.setItem('player', JSON.stringify(score)));
 };
 
-//AQUI
-const read = () => console.log(JSON.parse(localStorage.getItem('itemsArray')));
+const userGuardado = JSON.parse(localStorage.getItem('user')); //no hace falta igualar, se parasea
+console.log(userGuardado);
 
 //
 const selectAnswer = () => {
@@ -130,7 +128,8 @@ const selectAnswer = () => {
     startButton.innerText = 'Restart';
 
     startButton.classList.remove('hide');
-    `player_id${playerId++}`;
+    `player_id`;
+    //`player_id${playerId++}`;
     const items = { ...localStorage };
   }
 };
