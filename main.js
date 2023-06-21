@@ -15,7 +15,6 @@ const answerContainer = document.getElementById('answers');
 const ulAnswers = document.getElementById('answers');
 
 let scores = JSON.parse(localStorage.getItem('scores')) || [];
-//btnStart.classList = "hide";
 
 //localstorage - get
 const scoreSaved = JSON.parse(localStorage.getItem('scores')); //no hace falta igualar, se parasea
@@ -95,7 +94,7 @@ const printQuestion = apiData => {
         currentQuestionIndex++;
         printQuestion(apiData);
       } else {
-        //LOCALSTORAGE del score: cuando haga reset, crear otro score
+        //LOCALSTORAGE del score al acabar
         scores.push(score);
         localStorage.setItem(`scores`, JSON.stringify(scores));
         //localstorage - get
@@ -103,7 +102,7 @@ const printQuestion = apiData => {
         console.log(scoreSaved);
         navigate('results');
       }
-    }, 30);
+    }, 1000);
   };
 
   for (let answer of allAnswers) {
@@ -132,11 +131,7 @@ const selectAnswer = () => {
     nextButton.classList.remove('hide');
   } else {
     startButton.innerText = 'Restart';
-
     startButton.classList.remove('hide');
-    `player_id`;
-    //`player_id${playerId++}`;
-    const items = { ...localStorage };
   }
 };
 
