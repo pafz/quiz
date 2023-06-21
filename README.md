@@ -61,7 +61,7 @@ En este proyecto se desarrolla una página web SPA que consta de 3 tipos de vist
 
 Cada pregunta con sus cuatro respuestas se muentran de forma individual. A través de un botón se selecciona una única opción y justo despúes todos los botones de respuestas serán bloqueados. Durante 1 segundo a través de un <i>setTimeOut</i> se visualizará en color verde el texto del botón en caso de ser correcta, o por el contrario en color rojo en caso de ser incorrecta. Después de ese 1 segundo pasa a la siguiente pregunta de forma automática hasta llegar a la última pregunta.
 
-Una vez finalizadas las preguntas se mostrará el resultado de ese Quiz recién realizado junto con dos botones que realizarán la función de navegador para acceder a la vista <i>Home</i> o para <i>reempezar</i> el juego.
+Una vez finalizadas las preguntas se mostrará el resultado de ese Quiz recién realizado junto con dos botones que realizarán la función de navegador para acceder a la vista <i>Home</i> o para <i>Reempezar</i> el juego.
 
 ### Views
 
@@ -79,7 +79,10 @@ Una vez finalizadas las preguntas se mostrará el resultado de ese Quiz recién 
 
 ## Future Roadmap
 
-- [ ] Keep perfectioning the page adding DB
+- [ ] Keep perfectioning styles to be funny
+- [ ] Add player's ranking and initials
+- [ ] Level up or be able to change the subject
+- [ ] Add countdown
 
 <p align="right">(<a href="README.md#top">volver al principio </a>)</p>
 
@@ -87,7 +90,7 @@ Una vez finalizadas las preguntas se mostrará el resultado de ese Quiz recién 
 
 ## License
 
-Este proyecto ha sido realizado como trabajo de aprendizaje por Juanda Mayorga y Patricia Fernández.
+Este proyecto ha sido realizado como trabajo de aprendizaje por Patricia Fernández.
 
 <p align="right">(<a href="README.md#top">volver al principio </a>)</p>
 
@@ -95,9 +98,11 @@ Este proyecto ha sido realizado como trabajo de aprendizaje por Juanda Mayorga y
 
 ## Preview
 
-- General overview gif
+- General overview
 
-![foto](./src/assets/b2fa5531-8506-42c1-94b8-720875686632.gif)
+![foto](./imgs/quiz-welcome.png)
+![foto](./imgs/quiz-question.png)
+![foto](./imgs/quiz-result.png)
 
 <!-- CONTACT -->
 

@@ -1,13 +1,3 @@
-//TODO:aumentar contador a 9 para probar cuando se lleva a la últma pregunta. Select li button
-//TODO: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort
-//TOFIX: eliminar creacion de btn next
-
-//REVISAR RESPOSIVE, HACER README
-
-//TODO: get localstorage and print graphics
-//borrar lo que está de más y añadir otro user desde id
-
-//CAMBIAR LA KEY a ID y luego asignarle nuevos valores ++
 const questionContainer = document.getElementById('question');
 const questionNumber = document.getElementById('question-number');
 const answerContainer = document.getElementById('answers');
@@ -19,11 +9,6 @@ let scores = JSON.parse(localStorage.getItem('scores')) || [];
 //localstorage - get
 const scoreSaved = JSON.parse(localStorage.getItem('scores')); //no hace falta igualar, se parasea
 console.log(scoreSaved);
-
-const bntNext = document.createElement('button');
-bntNext.innerText = 'Next ->';
-bntNext.classList = 'hide';
-document.body.appendChild(bntNext);
 
 const divGraphics = document.getElementById('graphics');
 
@@ -62,7 +47,7 @@ const startApi = () => {
 
 const sanitizeText = text => decodeURI(text).replaceAll('%3F', '?'); //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/decodeURI
 
-/////print a Question & Answers
+//print a Question & Answers
 const printQuestion = apiData => {
   const questionAndAnswers = apiData[currentQuestionIndex];
   questionNumber.innerText = currentQuestionIndex + 1;
@@ -94,7 +79,7 @@ const printQuestion = apiData => {
         currentQuestionIndex++;
         printQuestion(apiData);
       } else {
-        //LOCALSTORAGE del score al acabar
+        //localstorage del score al acabar
         scores.push(score);
         localStorage.setItem(`scores`, JSON.stringify(scores));
         //localstorage - get
@@ -122,7 +107,7 @@ const printQuestion = apiData => {
 //localstorage - update
 const update = () =>
   console.log(localStorage.setItem('player', JSON.stringify(score)));
-//
+
 const selectAnswer = () => {
   Array.from(answerButtonsElement.children).forEach(button => {
     setStatusClass(button);

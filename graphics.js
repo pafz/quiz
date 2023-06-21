@@ -1,4 +1,3 @@
-//GRAPHICS
 let labels = [];
 let dataInfo = [];
 
