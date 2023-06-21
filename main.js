@@ -1,5 +1,8 @@
 //TODO:aumentar contador a 9 para probar cuando se lleva a la últma pregunta. Select li button
 //TODO: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort
+//TOFIX: eliminar creacion de btn next
+
+//REVISAR RESPOSIVE, HACER README
 
 //TODO: get localstorage and print graphics
 //borrar lo que está de más y añadir otro user desde id
