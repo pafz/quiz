@@ -1,22 +1,18 @@
-//TODO:después añadir desde DOM class='hide' donde sea necesario
 //TODO:aumentar contador a 9 para probar cuando se lleva a la últma pregunta. Select li button
 //TODO: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort
 
-//FIXED: en localstorage no detecta último acierto score
+//TODO: get localstorage and print graphics
 //borrar lo que está de más y añadir otro user desde id
-//añadir paginas SPA
 
 //CAMBIAR LA KEY a ID y luego asignarle nuevos valores ++
 const questionContainer = document.getElementById('question');
+const questionNumber = document.getElementById('question-number');
 const answerContainer = document.getElementById('answers');
 
 const ulAnswers = document.getElementById('answers');
 
-const btnStart = document.createElement('button');
-btnStart.innerText = 'Start the game';
 let scores = JSON.parse(localStorage.getItem('scores')) || [];
 //btnStart.classList = "hide";
-document.body.appendChild(btnStart);
 
 //localstorage - get
 const scoreSaved = JSON.parse(localStorage.getItem('scores')); //no hace falta igualar, se parasea
@@ -39,10 +35,13 @@ let playerId = 1;
 
 const startGame = e => {
   e.preventDefault();
-  currentQuestionIndex = 9;
+  currentQuestionIndex = 0;
   score = 0;
-  btnStart.classList.add('hide');
+  questionContainer.innerText = '';
+  questionNumber.innerText = '';
+  ulAnswers.innerHTML = '';
   startApi();
+  navigate('quiz');
 };
 
 //API
@@ -64,10 +63,8 @@ const sanitizeText = text => decodeURI(text).replaceAll('%3F', '?'); //https://d
 /////print a Question & Answers
 const printQuestion = apiData => {
   const questionAndAnswers = apiData[currentQuestionIndex];
-  document.getElementById('question-number').innerText =
-    currentQuestionIndex + 1;
+  questionNumber.innerText = currentQuestionIndex + 1;
   questionContainer.innerText = sanitizeText(questionAndAnswers.question);
-
   ulAnswers.innerHTML = '';
   let allAnswers = [];
   allAnswers.push(questionAndAnswers.correct_answer);
@@ -98,15 +95,12 @@ const printQuestion = apiData => {
         //LOCALSTORAGE del score: cuando haga reset, crear otro score
         scores.push(score);
         localStorage.setItem(`scores`, JSON.stringify(scores));
-        btnStart.innerText = 'Restart';
-        btnStart.classList.remove('hide');
         //localstorage - get
         const scoreSaved = JSON.parse(localStorage.getItem('scores')); //no hace falta igualar, se parasea
         console.log(scoreSaved);
-        //AQUÍ METER LA GRÁFICA
-        graphis();
+        navigate('results');
       }
-    }, 3000);
+    }, 30);
   };
 
   for (let answer of allAnswers) {
@@ -124,10 +118,8 @@ const printQuestion = apiData => {
 };
 
 //localstorage - update
-const update = () => {
+const update = () =>
   console.log(localStorage.setItem('player', JSON.stringify(score)));
-};
-
 //
 const selectAnswer = () => {
   Array.from(answerButtonsElement.children).forEach(button => {
@@ -146,47 +138,32 @@ const selectAnswer = () => {
 };
 
 //SPA:
-const goWelcome = () => {
-  h1.classList.remove('hide');
-  h3.classList.add('hide');
+const navigate = containerId => {
+  const welcome = document.getElementById('welcome');
+  const quiz = document.getElementById('quiz');
+  const results = document.getElementById('results');
+
+  switch (containerId) {
+    case 'welcome':
+      welcome.classList.remove('hide');
+      quiz.classList.add('hide');
+      results.classList.add('hide');
+      break;
+    case 'quiz':
+      welcome.classList.add('hide');
+      quiz.classList.remove('hide');
+      results.classList.add('hide');
+      break;
+    case 'results':
+      welcome.classList.add('hide');
+      quiz.classList.add('hide');
+      results.classList.remove('hide');
+      break;
+  }
 };
 
-const goQuestions = () => {};
-
-const goEndPage = () => {
-  question - number.classList.remove('hide');
-  divGraphics.classList.add('hide');
-};
-
-const graphis = () => {
-  const labels = [
-    'Enero',
-    'Febrero',
-    'Marzo',
-    'Abril',
-    'Mayo',
-    'Junio',
-    'Julio',
-  ];
-
-  const data = {
-    labels: labels,
-    datasets: [
-      {
-        label: 'Mi primera gráfica',
-        backgroundColor: 'rgb(255, 99, 132)',
-        borderColor: 'rgb(255, 99, 132)',
-        data: [0, 10, 5, 2, 20, 30, 45],
-      },
-    ],
-  };
-
-  const config = {
-    type: 'bar',
-    data: data,
-    options: {},
-  };
-
-  const myChart = new Chart('myChart', config);
-};
-btnStart.addEventListener('click', startGame);
+document.getElementById('start').addEventListener('click', startGame);
+document.getElementById('restart').addEventListener('click', startGame);
+document.getElementById('home').addEventListener('click', () => {
+  navigate('welcome');
+});

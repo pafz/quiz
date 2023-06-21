@@ -8,22 +8,32 @@
     <link rel="stylesheet" href="./style.css" />
   </head>
   <body>
-    <h1 id="h1">Welcome to the quiz</h1>
-    <h3 id="h3">Correct answers:<span id="score">0</span></h3>
-    <h2>
-      <span id="question-number"></span>
-      <span id="question"></span>
-    </h2>
-    <ul id="answers"></ul>
-    <h1>Gráficas con JavaScript</h1>
-    <div class="contenedor">
-      <canvas id="myChart"></canvas>
+    <div id="welcome">
+      <div class="container">
+        <h1 id="h1">Welcome to the quiz</h1>
+        <button id="start">Start the quiz!</button>
+      </div>
+      <div class="container">
+        <h1>Gráficas con JavaScript</h1>
+        <canvas id="myChart"></canvas>
+      </div>
+    </div>
+    <div id="quiz" class="hide">
+      <div class="container">
+        <h2>
+          <span id="question-number"></span>
+          <span id="question"></span>
+        </h2>
+        <ul id="answers"></ul>
+      </div>
+    </div>
+    <div id="results" class="container hide">
+      <h3 id="h3">Correct answers:<span id="score">0</span>/10</h3>
+      <button id="restart">Restart</button><button id="home">Home</button>
     </div>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <div id="graphics">
-      <script src="graphics.js"></script>
-    </div>
+    <script defer src="./graphics.js"></script>
     <script src="./main.js"></script>
   </body>
 </html>
