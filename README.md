@@ -79,6 +79,7 @@ Una vez finalizadas las preguntas se mostrará el resultado de ese Quiz recién 
 
 ## Future Roadmap
 
+- [ ] Mobile first
 - [ ] Keep perfectioning styles to be funny
 - [ ] Add player's ranking and initials
 - [ ] Level up or be able to change the subject

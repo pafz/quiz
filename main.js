@@ -18,7 +18,6 @@ const h3 = document.getElementById('h3');
 //i question en realidad es 0
 let currentQuestionIndex;
 let score;
-let playerId = 1;
 
 const startGame = e => {
   e.preventDefault();
